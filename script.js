@@ -6,6 +6,8 @@ const score1El = document.getElementById('score--1');
 const diceEl = document.querySelector('.dice');
 const current0El = document.getElementById('current--0');
 const current1El = document.getElementById('current--1');
+const player0El = document.querySelector('.player--0');
+const player1El = document.querySelector('.player--1');
 
 const btnNew = document.querySelector('.btn--new');
 const btnRoll = document.querySelector('.btn--roll');
@@ -17,6 +19,7 @@ score1El.textContent = 0;
 diceEl.classList.add('hidden'); // nascondo img dado
 
 let currentScore = 0;
+let activePlayer = 0; // creo variabile per cambiare dinamicamente il giocatore attivo
 
 // Implemento funzionalità lancio dadi
 btnRoll.addEventListener('click', function () {
@@ -32,10 +35,21 @@ btnRoll.addEventListener('click', function () {
   if (diceNumber !== 1) {
     // Aggiungo il numero uscito al punteggio corrente e lo visualizzo in pagina
     currentScore += diceNumber;
-    current0El.textContent = currentScore;
+    document.getElementById(`current--${activePlayer}`).textContent =
+      currentScore;
   } else {
     // Riporto a 0 il punteggio corrente
     currentScore = 0;
-    current0El.textContent = currentScore;
+    document.getElementById(`current--${activePlayer}`).textContent =
+      currentScore;
+    document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.remove('player--active');
+
+    // Cambio giocatore attivo
+    activePlayer = activePlayer === 0 ? 1 : 0;
+    document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.add('player--active');
   }
 });
