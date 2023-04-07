@@ -21,6 +21,7 @@ diceEl.classList.add('hidden'); // nascondo img dado
 const scores = [0, 0]; // creo array con i punteggi totali che andranno ad accumularsi [punteggio player0, punteggio player 1]
 let currentScore = 0;
 let activePlayer = 0; // creo variabile per cambiare dinamicamente il giocatore attivo
+let playing = true; // creo variabile per definire lo stato del gioco (in corso: true, terminato: false)
 
 const switchPlayer = function () {
   // Riporto a 0 il punteggio corrente
@@ -40,43 +41,49 @@ const switchPlayer = function () {
 
 // Implemento funzionalità lancio dadi
 btnRoll.addEventListener('click', function () {
-  // 1. Genero numero di dadi casuale da 1 a 6
-  let diceNumber = Math.trunc(Math.random() * 6) + 1;
+  if (playing) {
+    // 1. Genero numero di dadi casuale da 1 a 6
+    let diceNumber = Math.trunc(Math.random() * 6) + 1;
 
-  // 2. Visualizzo dado con l'immagine corrispondente al numero uscito
-  diceEl.classList.remove('hidden');
-  diceEl.src = `dice-${diceNumber}.png`; // imposto l'immagine del dado da visualizzare (caricamento dinamico img)
+    // 2. Visualizzo dado con l'immagine corrispondente al numero uscito
+    diceEl.classList.remove('hidden');
+    diceEl.src = `dice-${diceNumber}.png`; // imposto l'immagine del dado da visualizzare (caricamento dinamico img)
 
-  // 3. Controllo se il numero uscito è = 1: se true passo al giocatore successivo
-  if (diceNumber !== 1) {
-    // Aggiungo il numero uscito al punteggio corrente e lo visualizzo in pagina
-    currentScore += diceNumber;
-    document.getElementById(`current--${activePlayer}`).textContent =
-      currentScore;
-  } else {
-    // Riporto a 0 il punteggio corrente e cambio giocatore attivo
-    switchPlayer();
+    // 3. Controllo se il numero uscito è = 1: se true passo al giocatore successivo
+    if (diceNumber !== 1) {
+      // Aggiungo il numero uscito al punteggio corrente e lo visualizzo in pagina
+      currentScore += diceNumber;
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore;
+    } else {
+      // Riporto a 0 il punteggio corrente e cambio giocatore attivo
+      switchPlayer();
+    }
   }
 });
 
 // Implemento funzionalità per mantenere il punteggio corrente e definire il vincitore
 btnHold.addEventListener('click', function () {
-  // 1. Aggiungo current score al punteggio totale del giocatore attivo
-  scores[activePlayer] += currentScore;
-  document.getElementById(`score--${activePlayer}`).textContent =
-    scores[activePlayer];
+  if (playing) {
+    // 1. Aggiungo current score al punteggio totale del giocatore attivo
+    scores[activePlayer] += currentScore;
+    document.getElementById(`score--${activePlayer}`).textContent =
+      scores[activePlayer];
 
-  // 2. Controllo se il giocatore ha un punteggio totale >= 100: se true il gioco termina, altrimenti cambio giocatore attivo
-  if (scores[activePlayer] >= 100) {
-    // Gioco terminato
-    document
-      .querySelector(`.player--${activePlayer}`)
-      .classList.add('player--winner');
-    document
-      .querySelector(`.player--${activePlayer}`)
-      .classList.remove('player--active');
-  } else {
-    // Riporto a 0 il punteggio corrente e cambio giocatore attivo
-    switchPlayer();
+    // 2. Controllo se il giocatore ha un punteggio totale >= 100: se true il gioco termina, altrimenti cambio giocatore attivo
+    if (scores[activePlayer] >= 100) {
+      // Gioco terminato
+      playing = false;
+      diceEl.classList.add('hidden'); // nascondo img dado
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+    } else {
+      // Riporto a 0 il punteggio corrente e cambio giocatore attivo
+      switchPlayer();
+    }
   }
 });
