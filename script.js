@@ -14,6 +14,7 @@ const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
 
 // Imposto condizioni iniziali
+/*
 score0El.textContent = 0;
 score1El.textContent = 0;
 diceEl.classList.add('hidden'); // nascondo img dado
@@ -22,6 +23,29 @@ let scores = [0, 0]; // creo array con i punteggi totali che andranno ad accumul
 let currentScore = 0;
 let activePlayer = 0; // creo variabile per cambiare dinamicamente il giocatore attivo
 let playing = true; // creo variabile per definire lo stato del gioco (in corso: true, terminato: false)
+*/
+
+// REFACTORING: creo funzione per impostare le condizioni iniziali, ma dichiaro fuori le variabili per poterle utilizzare a livello globale e non solo nello scope della funzione
+let scores, currentScore, activePlayer, playing;
+
+const init = function () {
+  scores = [0, 0];
+  currentScore = 0;
+  activePlayer = 0;
+  playing = true;
+
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  current0El.textContent = 0;
+  current1El.textContent = 0;
+
+  diceEl.classList.add('hidden'); // nascondo img dado
+  player0El.classList.remove('player--winner');
+  player1El.classList.remove('player--winner');
+  player0El.classList.add('player--active');
+  player1El.classList.remove('player--active');
+};
+init();
 
 const switchPlayer = function () {
   // Riporto a 0 il punteggio corrente
@@ -89,20 +113,4 @@ btnHold.addEventListener('click', function () {
 });
 
 // Implemento funzionalità per resettare il gioco
-btnNew.addEventListener('click', function () {
-  playing = true;
-  document
-    .querySelector(`.player--${activePlayer}`)
-    .classList.remove('player--winner'); // rimuovo sfondo vincitore
-  activePlayer = 0;
-  currentScore = 0;
-  scores = [0, 0];
-
-  current0El.textContent = 0;
-  current1El.textContent = 0;
-  score0El.textContent = 0;
-  score1El.textContent = 0;
-  document
-    .querySelector(`.player--${activePlayer}`)
-    .classList.add('player--active'); // aggiungo sfondo giocatore attivo
-});
+btnNew.addEventListener('click', init);
