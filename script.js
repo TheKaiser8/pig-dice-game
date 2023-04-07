@@ -18,7 +18,7 @@ score0El.textContent = 0;
 score1El.textContent = 0;
 diceEl.classList.add('hidden'); // nascondo img dado
 
-const scores = [0, 0]; // creo array con i punteggi totali che andranno ad accumularsi [punteggio player0, punteggio player 1]
+let scores = [0, 0]; // creo array con i punteggi totali che andranno ad accumularsi [punteggio player0, punteggio player 1]
 let currentScore = 0;
 let activePlayer = 0; // creo variabile per cambiare dinamicamente il giocatore attivo
 let playing = true; // creo variabile per definire lo stato del gioco (in corso: true, terminato: false)
@@ -86,4 +86,23 @@ btnHold.addEventListener('click', function () {
       switchPlayer();
     }
   }
+});
+
+// Implemento funzionalità per resettare il gioco
+btnNew.addEventListener('click', function () {
+  playing = true;
+  document
+    .querySelector(`.player--${activePlayer}`)
+    .classList.remove('player--winner'); // rimuovo sfondo vincitore
+  activePlayer = 0;
+  currentScore = 0;
+  scores = [0, 0];
+
+  current0El.textContent = 0;
+  current1El.textContent = 0;
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  document
+    .querySelector(`.player--${activePlayer}`)
+    .classList.add('player--active'); // aggiungo sfondo giocatore attivo
 });
